@@ -127,6 +127,77 @@ Lines: 1
 <unsupported>
 Mode: 644
 # ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Directory: fixtures/devices/system/cpu/cpu1
+Mode: 755
+# ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Directory: fixtures/devices/system/cpu/cpu1/cpufreq
+Mode: 755
+# ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Path: fixtures/devices/system/cpu/cpu1/cpufreq/affected_cpus
+Lines: 1
+1
+Mode: 444
+# ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Path: fixtures/devices/system/cpu/cpu1/cpufreq/cpuinfo_cur_freq
+Lines: 1
+1178125
+Mode: 444
+# ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Path: fixtures/devices/system/cpu/cpu1/cpufreq/cpuinfo_max_freq
+Lines: 1
+3700000
+Mode: 444
+# ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Path: fixtures/devices/system/cpu/cpu1/cpufreq/cpuinfo_min_freq
+Lines: 1
+1000000
+Mode: 444
+# ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Path: fixtures/devices/system/cpu/cpu1/cpufreq/cpuinfo_transition_latency
+Lines: 1
+4294967295
+Mode: 444
+# ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Path: fixtures/devices/system/cpu/cpu1/cpufreq/related_cpus
+Lines: 1
+1
+Mode: 444
+# ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Path: fixtures/devices/system/cpu/cpu1/cpufreq/scaling_available_governors
+Lines: 1
+performance powersave
+Mode: 444
+# ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Path: fixtures/devices/system/cpu/cpu1/cpufreq/scaling_cur_freq
+Lines: 1
+1178125
+Mode: 444
+# ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Path: fixtures/devices/system/cpu/cpu1/cpufreq/scaling_driver
+Lines: 1
+intel_pstate
+Mode: 444
+# ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Path: fixtures/devices/system/cpu/cpu1/cpufreq/scaling_governor
+Lines: 1
+powersave
+Mode: 644
+# ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Path: fixtures/devices/system/cpu/cpu1/cpufreq/scaling_max_freq
+Lines: 1
+3700000
+Mode: 644
+# ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Path: fixtures/devices/system/cpu/cpu1/cpufreq/scaling_min_freq
+Lines: 1
+1000000
+Mode: 644
+# ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Path: fixtures/devices/system/cpu/cpu1/cpufreq/scaling_setspeed
+Lines: 1
+<unsupported>
+Mode: 644
+# ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 Directory: fixtures/devices/pci0000:00
 Mode: 755
 # ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
