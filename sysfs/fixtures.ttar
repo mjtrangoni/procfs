@@ -36,6 +36,97 @@ Lines: 1
 0-159
 Mode: 444
 # ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Directory: fixtures/devices/system/cpu/cpu0
+Mode: 755
+# ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Directory: fixtures/devices/system/cpu/cpu0/cpufreq
+Mode: 755
+# ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Path: fixtures/devices/system/cpu/cpu0/cpufreq/affected_cpus
+Lines: 1
+0
+Mode: 444
+# ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Path: fixtures/devices/system/cpu/cpu0/cpufreq/bios_limit
+Lines: 1
+2300000
+Mode: 444
+# ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Path: fixtures/devices/system/cpu/cpu0/cpufreq/cpb
+Lines: 1
+1
+Mode: 444
+# ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Path: fixtures/devices/system/cpu/cpu0/cpufreq/cpuinfo_cur_freq
+Lines: 1
+2300000
+Mode: 444
+# ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Path: fixtures/devices/system/cpu/cpu0/cpufreq/cpuinfo_max_freq
+Lines: 1
+2300000
+Mode: 444
+# ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Path: fixtures/devices/system/cpu/cpu0/cpufreq/cpuinfo_min_freq
+Lines: 1
+1200000
+Mode: 444
+# ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Path: fixtures/devices/system/cpu/cpu0/cpufreq/cpuinfo_transition_latency
+Lines: 1
+0
+Mode: 444
+# ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Path: fixtures/devices/system/cpu/cpu0/cpufreq/freqdomain_cpus
+Lines: 1
+0 48
+Mode: 444
+# ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Path: fixtures/devices/system/cpu/cpu0/cpufreq/related_cpus
+Lines: 1
+0
+Mode: 444
+# ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Path: fixtures/devices/system/cpu/cpu0/cpufreq/scaling_available_frequencies
+Lines: 1
+2300000 1800000 1200000 
+Mode: 444
+# ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Path: fixtures/devices/system/cpu/cpu0/cpufreq/scaling_available_governors
+Lines: 1
+conservative userspace powersave ondemand performance 
+Mode: 444
+# ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Path: fixtures/devices/system/cpu/cpu0/cpufreq/scaling_cur_freq
+Lines: 1
+2300000
+Mode: 444
+# ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Path: fixtures/devices/system/cpu/cpu0/cpufreq/scaling_driver
+Lines: 1
+acpi-cpufreq
+Mode: 444
+# ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Path: fixtures/devices/system/cpu/cpu0/cpufreq/scaling_governor
+Lines: 1
+performance
+Mode: 644
+# ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Path: fixtures/devices/system/cpu/cpu0/cpufreq/scaling_max_freq
+Lines: 1
+2300000
+Mode: 644
+# ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Path: fixtures/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
+Lines: 1
+1200000
+Mode: 644
+# ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Path: fixtures/devices/system/cpu/cpu0/cpufreq/scaling_setspeed
+Lines: 1
+<unsupported>
+Mode: 644
+# ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 Directory: fixtures/devices/pci0000:00
 Mode: 755
 # ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
