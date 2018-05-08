@@ -198,6 +198,87 @@ Lines: 1
 <unsupported>
 Mode: 644
 # ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Directory: fixtures/devices/system/cpu/cpu8
+Mode: 755
+# ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Directory: fixtures/devices/system/cpu/cpu8/cpufreq
+Mode: 755
+# ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Path: fixtures/devices/system/cpu/cpu8/cpufreq/affected_cpus
+Lines: 1
+8 9
+Mode: 444
+# ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Path: fixtures/devices/system/cpu/cpu8/cpufreq/cpuinfo_cur_freq
+Lines: 1
+3690000
+Mode: 444
+# ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Path: fixtures/devices/system/cpu/cpu8/cpufreq/cpuinfo_max_freq
+Lines: 1
+3690000
+Mode: 444
+# ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Path: fixtures/devices/system/cpu/cpu8/cpufreq/cpuinfo_min_freq
+Lines: 1
+2061000
+Mode: 444
+# ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Path: fixtures/devices/system/cpu/cpu8/cpufreq/cpuinfo_nominal_freq
+Lines: 1
+3424000
+Mode: 444
+# ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Path: fixtures/devices/system/cpu/cpu8/cpufreq/cpuinfo_transition_latency
+Lines: 1
+0
+Mode: 444
+# ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Path: fixtures/devices/system/cpu/cpu8/cpufreq/related_cpus
+Lines: 1
+8 9 10 11 12 13 14 15
+Mode: 444
+# ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Path: fixtures/devices/system/cpu/cpu8/cpufreq/scaling_available_frequencies
+Lines: 1
+3690000 3657000 3624000 3591000 3557000 3524000 3491000 3458000 3424000 3391000 3358000 3325000 3291000 3258000 3225000 3192000 3158000 3125000 3092000 3059000 3025000 2992000 2959000 2926000 2892000 2859000 2826000 2793000 2759000 2726000 2693000 2660000 2626000 2593000 2560000 2527000 2493000 2460000 2427000 2394000 2360000 2327000 2294000 2261000 2227000 2194000 2161000 2128000 2094000 2061000 
+Mode: 444
+# ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Path: fixtures/devices/system/cpu/cpu8/cpufreq/scaling_available_governors
+Lines: 1
+conservative userspace powersave ondemand performance 
+Mode: 444
+# ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Path: fixtures/devices/system/cpu/cpu8/cpufreq/scaling_cur_freq
+Lines: 1
+3690000
+Mode: 444
+# ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Path: fixtures/devices/system/cpu/cpu8/cpufreq/scaling_driver
+Lines: 1
+powernv-cpufreq
+Mode: 444
+# ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Path: fixtures/devices/system/cpu/cpu8/cpufreq/scaling_governor
+Lines: 1
+performance
+Mode: 644
+# ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Path: fixtures/devices/system/cpu/cpu8/cpufreq/scaling_max_freq
+Lines: 1
+3690000
+Mode: 644
+# ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Path: fixtures/devices/system/cpu/cpu8/cpufreq/scaling_min_freq
+Lines: 1
+2061000
+Mode: 644
+# ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Path: fixtures/devices/system/cpu/cpu8/cpufreq/scaling_setspeed
+Lines: 1
+<unsupported>
+Mode: 644
+# ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 Directory: fixtures/devices/pci0000:00
 Mode: 755
 # ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
