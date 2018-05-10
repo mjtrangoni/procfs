@@ -18,6 +18,8 @@ import (
 	"io/ioutil"
 	"strconv"
 	"strings"
+
+	"github.com/prometheus/common/log"
 )
 
 // CPUFreq contains information about CPU frequency and voltage scaling. See
@@ -57,16 +59,17 @@ type CPUThermalThrottle struct {
 // CPUInfoGeneric contains information about all CPUs in general. See
 // https://www.kernel.org/doc/Documentation/ABI/testing/sysfs-devices-system-cpu
 type CPUInfoGeneric struct {
-	KernelMax int64  // /sys/devices/system/cpu/kernel_max
-	Offline   string // /sys/devices/system/cpu/offline
-	Online    string // /sys/devices/system/cpu/online
-	Possible  string // /sys/devices/system/cpu/possible
-	Present   string // /sys/devices/system/cpu/present
+	KernelMax int64   // /sys/devices/system/cpu/kernel_max
+	Offline   []int64 // /sys/devices/system/cpu/offline
+	Online    []int64 // /sys/devices/system/cpu/online
+	Possible  []int64 // /sys/devices/system/cpu/possible
+	Present   []int64 // /sys/devices/system/cpu/present
 }
 
 // CPUInfo contains all CPU information.
 type CPUInfo struct {
 	CPUInfoGeneric CPUInfoGeneric
+	CPUFreqString  []CPUFreq
 }
 
 // NewCPUInfo reads the cpu information.
@@ -88,9 +91,68 @@ func (fs FS) NewCPUInfo() (CPUInfo, error) {
 	// Get CPUInfoGeneric information
 	cpuInformation.CPUInfoGeneric, err = parseCPUInfoGeneric(fs)
 	if err != nil {
-		return CPUInfo{}, err
+		return cpuInformation, err
+	}
+	// Get CPUInfoGeneric information
+	cpuInformation.CPUFreqString, err = parseCPUFreq(fs,
+		cpuInformation.CPUInfoGeneric.Online)
+	if err != nil {
+		return cpuInformation, err
 	}
 	return cpuInformation, err
+}
+
+func parseCPUFreq(fs FS, online []int64) ([]CPUFreq, error) {
+
+	cpuFreqStruct := make([]CPUFreq, len(online))
+	var err error
+
+	for _, cpuNum := range online {
+		path := fs.Path("devices/system/cpu/cpu" + fmt.Sprintf("%d", cpuNum) + "/cpufreq")
+		files, err := ioutil.ReadDir(path)
+		if err != nil {
+			// There is cases where there is no cpufreq information.
+			continue
+		}
+
+		for _, fileDir := range files {
+
+			fileContents, err := ioutil.ReadFile(path + "/" + fileDir.Name())
+			if err != nil {
+				return cpuFreqStruct, fmt.Errorf("cannot access %s, %s", path+"/"+fileDir.Name(), err)
+			}
+			value := strings.TrimSpace(string(fileContents))
+
+			switch label := fileDir.Name(); label {
+			case "cpuinfo_cur_freq":
+				cpuFreqStruct[cpuNum].CPUInfoCurFreq, err = strconv.ParseInt(value, 10, 64)
+			case "cpuinfo_max_freq":
+				cpuFreqStruct[cpuNum].CPUInfoMaxFreq, err = strconv.ParseInt(value, 10, 64)
+			case "cpuinfo_min_freq":
+				cpuFreqStruct[cpuNum].CPUInfoMinFreq, err = strconv.ParseInt(value, 10, 64)
+			case "cpuinfo_transition_latency":
+				cpuFreqStruct[cpuNum].CPUInfoTransitionLatency, err = strconv.ParseInt(value, 10, 64)
+			case "scaling_available_governors":
+				cpuFreqStruct[cpuNum].ScalingAvailableGovernors = value
+			case "scaling_cur_freq":
+				cpuFreqStruct[cpuNum].ScalingCurFreq, err = strconv.ParseInt(value, 10, 64)
+			case "scaling_driver":
+				cpuFreqStruct[cpuNum].ScalingDriver = value
+			case "scaling_governor":
+				cpuFreqStruct[cpuNum].ScalingGovernor = value
+			case "scaling_max_freq":
+				cpuFreqStruct[cpuNum].ScalingMaxFreq, err = strconv.ParseInt(value, 10, 64)
+			case "scaling_min_freq":
+				cpuFreqStruct[cpuNum].ScalingMinFreq, err = strconv.ParseInt(value, 10, 64)
+			case "scaling_setspeed":
+				cpuFreqStruct[cpuNum].ScalingSetspeed, err = strconv.ParseInt(value, 10, 64)
+			}
+			if err != nil {
+				log.Debugln(err)
+			}
+		}
+	}
+	return cpuFreqStruct, err
 }
 
 func parseCPUInfoGeneric(fs FS) (CPUInfoGeneric, error) {
@@ -108,7 +170,7 @@ func parseCPUInfoGeneric(fs FS) (CPUInfoGeneric, error) {
 		if fileDir.IsDir() {
 			continue
 		}
-		fileContents, err := sysReadFile(path + "/" + fileDir.Name())
+		fileContents, err := ioutil.ReadFile(path + "/" + fileDir.Name())
 		if err != nil {
 			return cpuInfoGeneric, fmt.Errorf("cannot access %s, %s", path+"/"+fileDir.Name(), err)
 		}
@@ -118,14 +180,32 @@ func parseCPUInfoGeneric(fs FS) (CPUInfoGeneric, error) {
 		case "kernel_max":
 			cpuInfoGeneric.KernelMax, err = strconv.ParseInt(value, 10, 64)
 		case "offline":
-			cpuInfoGeneric.Offline = value
+			cpuInfoGeneric.Offline = parseCPURange(value)
 		case "online":
-			cpuInfoGeneric.Online = value
+			cpuInfoGeneric.Online = parseCPURange(value)
 		case "possible":
-			cpuInfoGeneric.Possible = value
+			cpuInfoGeneric.Possible = parseCPURange(value)
 		case "present":
-			cpuInfoGeneric.Present = value
+			cpuInfoGeneric.Present = parseCPURange(value)
 		}
 	}
 	return cpuInfoGeneric, err
+}
+
+func parseCPURange(value string) []int64 {
+	var cpuSlice []int64
+	for _, component := range strings.Split(value, ",") {
+		first, err := strconv.ParseInt(strings.Split(component, "-")[0], 10, 64)
+		if err != nil {
+			log.Debugln(err)
+		}
+		last, err := strconv.ParseInt(strings.Split(component, "-")[1], 10, 64)
+		if err != nil {
+			log.Debugln(err)
+		}
+		for i := first; i <= last; i++ {
+			cpuSlice = append(cpuSlice, i)
+		}
+	}
+	return cpuSlice
 }
