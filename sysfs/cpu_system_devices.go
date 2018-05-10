@@ -68,9 +68,10 @@ type CPUInfoGeneric struct {
 
 // CPUInfo contains all CPU information.
 type CPUInfo struct {
-	CPUInfoGeneric   CPUInfoGeneric
-	CPUFreqSlice     []CPUFreq
-	CPUTopologySlice []CPUTopology
+	CPUInfoGeneric          CPUInfoGeneric
+	CPUFreqSlice            []CPUFreq
+	CPUTopologySlice        []CPUTopology
+	CPUThermalThrottleSlice []CPUThermalThrottle
 }
 
 // NewCPUInfo reads the cpu information.
@@ -106,7 +107,44 @@ func (fs FS) NewCPUInfo() (CPUInfo, error) {
 	if err != nil {
 		return cpuInformation, err
 	}
+	// Get CPUThermalThrottle information
+	cpuInformation.CPUThermalThrottleSlice, err = parseCPUThermalThrottle(fs,
+		cpuInformation.CPUInfoGeneric.Online)
 	return cpuInformation, err
+}
+
+func parseCPUThermalThrottle(fs FS, online []int64) ([]CPUThermalThrottle, error) {
+
+	cpuThermalThrottleSlice := make([]CPUThermalThrottle, len(online))
+	var err error
+
+	for _, cpuNum := range online {
+		path := fs.Path("devices/system/cpu/cpu" + fmt.Sprintf("%d", cpuNum) + "/thermal_throttle")
+		files, err := ioutil.ReadDir(path)
+		if err != nil {
+			// There is cases where there is no topology information.
+			continue
+		}
+
+		for _, fileDir := range files {
+			fmt.Println(fileDir.Name())
+			fileContents, err := ioutil.ReadFile(path + "/" + fileDir.Name())
+			if err != nil {
+				return cpuThermalThrottleSlice, fmt.Errorf("cannot access %s, %s", path+"/"+fileDir.Name(), err)
+			}
+			value := strings.TrimSpace(string(fileContents))
+			switch label := fileDir.Name(); label {
+			case "core_throttle_count":
+				cpuThermalThrottleSlice[cpuNum].CoreThrottleCount, err = strconv.ParseInt(value, 10, 64)
+			case "package_throttle_count":
+				cpuThermalThrottleSlice[cpuNum].PackageThrottleCount, err = strconv.ParseInt(value, 10, 64)
+			}
+			if err != nil {
+				log.Debugln(err)
+			}
+		}
+	}
+	return cpuThermalThrottleSlice, err
 }
 
 func parseCPUTopology(fs FS, online []int64) ([]CPUTopology, error) {
@@ -118,7 +156,7 @@ func parseCPUTopology(fs FS, online []int64) ([]CPUTopology, error) {
 		path := fs.Path("devices/system/cpu/cpu" + fmt.Sprintf("%d", cpuNum) + "/topology")
 		files, err := ioutil.ReadDir(path)
 		if err != nil {
-			// There is cases where there is no cpufreq information.
+			// There is cases where there is no topology information.
 			continue
 		}
 
@@ -235,6 +273,9 @@ func parseCPUInfoGeneric(fs FS) (CPUInfoGeneric, error) {
 			cpuInfoGeneric.Possible = parseCPURange(value)
 		case "present":
 			cpuInfoGeneric.Present = parseCPURange(value)
+		}
+		if err != nil {
+			log.Debugln(err)
 		}
 	}
 	return cpuInfoGeneric, err

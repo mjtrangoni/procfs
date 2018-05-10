@@ -236,12 +236,12 @@ Mode: 755
 # ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 Path: fixtures/devices/system/cpu/cpu1/thermal_throttle/core_throttle_count
 Lines: 1
-0
+30
 Mode: 444
 # ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 Path: fixtures/devices/system/cpu/cpu1/thermal_throttle/package_throttle_count
 Lines: 1
-0
+45
 Mode: 444
 # ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 Directory: fixtures/devices/system/cpu/cpu1/topology
