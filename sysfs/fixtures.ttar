@@ -231,6 +231,39 @@ Lines: 1
 <unsupported>
 Mode: 644
 # ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Directory: fixtures/devices/system/cpu/cpu1/topology
+Mode: 755
+# ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Path: fixtures/devices/system/cpu/cpu1/topology/core_id
+Lines: 1
+1
+Mode: 444
+# ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Path: fixtures/devices/system/cpu/cpu1/topology/core_siblings
+Lines: 1
+00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,0000ffff,0000ffff
+Mode: 444
+# ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Path: fixtures/devices/system/cpu/cpu1/topology/core_siblings_list
+Lines: 1
+0-15,32-47
+Mode: 444
+# ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Path: fixtures/devices/system/cpu/cpu1/topology/physical_package_id
+Lines: 1
+0
+Mode: 444
+# ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Path: fixtures/devices/system/cpu/cpu1/topology/thread_siblings
+Lines: 1
+00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000002,00000002
+Mode: 444
+# ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Path: fixtures/devices/system/cpu/cpu1/topology/thread_siblings_list
+Lines: 1
+1,33
+Mode: 444
+# ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 Directory: fixtures/devices/system/cpu/cpu8
 Mode: 755
 # ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
