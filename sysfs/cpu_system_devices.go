@@ -68,8 +68,9 @@ type CPUInfoGeneric struct {
 
 // CPUInfo contains all CPU information.
 type CPUInfo struct {
-	CPUInfoGeneric CPUInfoGeneric
-	CPUFreqString  []CPUFreq
+	CPUInfoGeneric   CPUInfoGeneric
+	CPUFreqSlice     []CPUFreq
+	CPUTopologySlice []CPUTopology
 }
 
 // NewCPUInfo reads the cpu information.
@@ -93,8 +94,14 @@ func (fs FS) NewCPUInfo() (CPUInfo, error) {
 	if err != nil {
 		return cpuInformation, err
 	}
-	// Get CPUInfoGeneric information
-	cpuInformation.CPUFreqString, err = parseCPUFreq(fs,
+	// Get CPUFreq information
+	cpuInformation.CPUFreqSlice, err = parseCPUFreq(fs,
+		cpuInformation.CPUInfoGeneric.Online)
+	if err != nil {
+		return cpuInformation, err
+	}
+	// Get CPUTopology information
+	cpuInformation.CPUTopologySlice, err = parseCPUTopology(fs,
 		cpuInformation.CPUInfoGeneric.Online)
 	if err != nil {
 		return cpuInformation, err
@@ -102,9 +109,50 @@ func (fs FS) NewCPUInfo() (CPUInfo, error) {
 	return cpuInformation, err
 }
 
+func parseCPUTopology(fs FS, online []int64) ([]CPUTopology, error) {
+
+	cpuTopologySlice := make([]CPUTopology, len(online))
+	var err error
+
+	for _, cpuNum := range online {
+		path := fs.Path("devices/system/cpu/cpu" + fmt.Sprintf("%d", cpuNum) + "/topology")
+		files, err := ioutil.ReadDir(path)
+		if err != nil {
+			// There is cases where there is no cpufreq information.
+			continue
+		}
+
+		for _, fileDir := range files {
+			fileContents, err := ioutil.ReadFile(path + "/" + fileDir.Name())
+			if err != nil {
+				return cpuTopologySlice, fmt.Errorf("cannot access %s, %s", path+"/"+fileDir.Name(), err)
+			}
+			value := strings.TrimSpace(string(fileContents))
+			switch label := fileDir.Name(); label {
+			case "core_id":
+				cpuTopologySlice[cpuNum].CoreID, err = strconv.ParseInt(value, 10, 64)
+			case "core_siblings":
+				cpuTopologySlice[cpuNum].CoreSiblings = value
+			case "core_siblings_list":
+				cpuTopologySlice[cpuNum].CoreSiblingsList = value
+			case "physical_package_id":
+				cpuTopologySlice[cpuNum].PhysicalPackageID, err = strconv.ParseInt(value, 10, 64)
+			case "thread_siblings":
+				cpuTopologySlice[cpuNum].ThreadSiblings = value
+			case "thread_siblings_list":
+				cpuTopologySlice[cpuNum].ThreadSiblingsList = value
+			}
+			if err != nil {
+				log.Debugln(err)
+			}
+		}
+	}
+	return cpuTopologySlice, err
+}
+
 func parseCPUFreq(fs FS, online []int64) ([]CPUFreq, error) {
 
-	cpuFreqStruct := make([]CPUFreq, len(online))
+	cpuFreqSlice := make([]CPUFreq, len(online))
 	var err error
 
 	for _, cpuNum := range online {
@@ -119,40 +167,40 @@ func parseCPUFreq(fs FS, online []int64) ([]CPUFreq, error) {
 
 			fileContents, err := ioutil.ReadFile(path + "/" + fileDir.Name())
 			if err != nil {
-				return cpuFreqStruct, fmt.Errorf("cannot access %s, %s", path+"/"+fileDir.Name(), err)
+				return cpuFreqSlice, fmt.Errorf("cannot access %s, %s", path+"/"+fileDir.Name(), err)
 			}
 			value := strings.TrimSpace(string(fileContents))
 
 			switch label := fileDir.Name(); label {
 			case "cpuinfo_cur_freq":
-				cpuFreqStruct[cpuNum].CPUInfoCurFreq, err = strconv.ParseInt(value, 10, 64)
+				cpuFreqSlice[cpuNum].CPUInfoCurFreq, err = strconv.ParseInt(value, 10, 64)
 			case "cpuinfo_max_freq":
-				cpuFreqStruct[cpuNum].CPUInfoMaxFreq, err = strconv.ParseInt(value, 10, 64)
+				cpuFreqSlice[cpuNum].CPUInfoMaxFreq, err = strconv.ParseInt(value, 10, 64)
 			case "cpuinfo_min_freq":
-				cpuFreqStruct[cpuNum].CPUInfoMinFreq, err = strconv.ParseInt(value, 10, 64)
+				cpuFreqSlice[cpuNum].CPUInfoMinFreq, err = strconv.ParseInt(value, 10, 64)
 			case "cpuinfo_transition_latency":
-				cpuFreqStruct[cpuNum].CPUInfoTransitionLatency, err = strconv.ParseInt(value, 10, 64)
+				cpuFreqSlice[cpuNum].CPUInfoTransitionLatency, err = strconv.ParseInt(value, 10, 64)
 			case "scaling_available_governors":
-				cpuFreqStruct[cpuNum].ScalingAvailableGovernors = value
+				cpuFreqSlice[cpuNum].ScalingAvailableGovernors = value
 			case "scaling_cur_freq":
-				cpuFreqStruct[cpuNum].ScalingCurFreq, err = strconv.ParseInt(value, 10, 64)
+				cpuFreqSlice[cpuNum].ScalingCurFreq, err = strconv.ParseInt(value, 10, 64)
 			case "scaling_driver":
-				cpuFreqStruct[cpuNum].ScalingDriver = value
+				cpuFreqSlice[cpuNum].ScalingDriver = value
 			case "scaling_governor":
-				cpuFreqStruct[cpuNum].ScalingGovernor = value
+				cpuFreqSlice[cpuNum].ScalingGovernor = value
 			case "scaling_max_freq":
-				cpuFreqStruct[cpuNum].ScalingMaxFreq, err = strconv.ParseInt(value, 10, 64)
+				cpuFreqSlice[cpuNum].ScalingMaxFreq, err = strconv.ParseInt(value, 10, 64)
 			case "scaling_min_freq":
-				cpuFreqStruct[cpuNum].ScalingMinFreq, err = strconv.ParseInt(value, 10, 64)
+				cpuFreqSlice[cpuNum].ScalingMinFreq, err = strconv.ParseInt(value, 10, 64)
 			case "scaling_setspeed":
-				cpuFreqStruct[cpuNum].ScalingSetspeed, err = strconv.ParseInt(value, 10, 64)
+				cpuFreqSlice[cpuNum].ScalingSetspeed, err = strconv.ParseInt(value, 10, 64)
 			}
 			if err != nil {
 				log.Debugln(err)
 			}
 		}
 	}
-	return cpuFreqStruct, err
+	return cpuFreqSlice, err
 }
 
 func parseCPUInfoGeneric(fs FS) (CPUInfoGeneric, error) {
