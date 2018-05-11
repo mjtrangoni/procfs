@@ -117,17 +117,16 @@ func parseCPUThermalThrottle(fs FS, online []int64) ([]CPUThermalThrottle, error
 
 	cpuThermalThrottleSlice := make([]CPUThermalThrottle, len(online))
 	var err error
+	var fileContents []byte
 
 	for _, cpuNum := range online {
 		path := fs.Path("devices/system/cpu/cpu" + fmt.Sprintf("%d", cpuNum) + "/thermal_throttle")
-		files, err := ioutil.ReadDir(path)
-		if err != nil {
-			// There is cases where there is no topology information.
-			continue
-		}
+		// There is cases where there is no topology information, that is why
+		// we do not check errors here.
+		files, _ := ioutil.ReadDir(path)
 
 		for _, fileDir := range files {
-			fileContents, err := ioutil.ReadFile(path + "/" + fileDir.Name())
+			fileContents, err = ioutil.ReadFile(path + "/" + fileDir.Name())
 			if err != nil {
 				return cpuThermalThrottleSlice, fmt.Errorf("cannot access %s, %s", path+"/"+fileDir.Name(), err)
 			}
@@ -150,17 +149,15 @@ func parseCPUTopology(fs FS, online []int64) ([]CPUTopology, error) {
 
 	cpuTopologySlice := make([]CPUTopology, len(online))
 	var err error
+	var fileContents []byte
 
 	for _, cpuNum := range online {
 		path := fs.Path("devices/system/cpu/cpu" + fmt.Sprintf("%d", cpuNum) + "/topology")
-		files, err := ioutil.ReadDir(path)
-		if err != nil {
-			// There is cases where there is no topology information.
-			continue
-		}
+		// There is cases where there is no topology information.
+		files, _ := ioutil.ReadDir(path)
 
 		for _, fileDir := range files {
-			fileContents, err := ioutil.ReadFile(path + "/" + fileDir.Name())
+			fileContents, err = ioutil.ReadFile(path + "/" + fileDir.Name())
 			if err != nil {
 				return cpuTopologySlice, fmt.Errorf("cannot access %s, %s", path+"/"+fileDir.Name(), err)
 			}
@@ -191,18 +188,15 @@ func parseCPUFreq(fs FS, online []int64) ([]CPUFreq, error) {
 
 	cpuFreqSlice := make([]CPUFreq, len(online))
 	var err error
+	var fileContents []byte
 
 	for _, cpuNum := range online {
 		path := fs.Path("devices/system/cpu/cpu" + fmt.Sprintf("%d", cpuNum) + "/cpufreq")
-		files, err := ioutil.ReadDir(path)
-		if err != nil {
-			// There is cases where there is no cpufreq information.
-			continue
-		}
+		files, _ := ioutil.ReadDir(path)
 
 		for _, fileDir := range files {
 
-			fileContents, err := ioutil.ReadFile(path + "/" + fileDir.Name())
+			fileContents, err = ioutil.ReadFile(path + "/" + fileDir.Name())
 			if err != nil {
 				return cpuFreqSlice, fmt.Errorf("cannot access %s, %s", path+"/"+fileDir.Name(), err)
 			}
@@ -230,7 +224,9 @@ func parseCPUFreq(fs FS, online []int64) ([]CPUFreq, error) {
 			case "scaling_min_freq":
 				cpuFreqSlice[cpuNum].ScalingMinFreq, err = strconv.ParseInt(value, 10, 64)
 			case "scaling_setspeed":
-				cpuFreqSlice[cpuNum].ScalingSetspeed, err = strconv.ParseInt(value, 10, 64)
+				// Ignore errors as this is supported currently only by the
+				// userspace governor.
+				cpuFreqSlice[cpuNum].ScalingSetspeed, _ = strconv.ParseInt(value, 10, 64)
 			}
 			if err != nil {
 				log.Debugln(err)
@@ -243,6 +239,7 @@ func parseCPUFreq(fs FS, online []int64) ([]CPUFreq, error) {
 func parseCPUInfoGeneric(fs FS) (CPUInfoGeneric, error) {
 
 	cpuInfoGeneric := CPUInfoGeneric{}
+	var fileContents []byte
 
 	path := fs.Path("devices/system/cpu")
 	files, err := ioutil.ReadDir(path)
@@ -255,7 +252,7 @@ func parseCPUInfoGeneric(fs FS) (CPUInfoGeneric, error) {
 		if fileDir.IsDir() {
 			continue
 		}
-		fileContents, err := ioutil.ReadFile(path + "/" + fileDir.Name())
+		fileContents, err = ioutil.ReadFile(path + "/" + fileDir.Name())
 		if err != nil {
 			return cpuInfoGeneric, fmt.Errorf("cannot access %s, %s", path+"/"+fileDir.Name(), err)
 		}
