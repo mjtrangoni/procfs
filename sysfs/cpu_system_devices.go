@@ -127,7 +127,6 @@ func parseCPUThermalThrottle(fs FS, online []int64) ([]CPUThermalThrottle, error
 		}
 
 		for _, fileDir := range files {
-			fmt.Println(fileDir.Name())
 			fileContents, err := ioutil.ReadFile(path + "/" + fileDir.Name())
 			if err != nil {
 				return cpuThermalThrottleSlice, fmt.Errorf("cannot access %s, %s", path+"/"+fileDir.Name(), err)
